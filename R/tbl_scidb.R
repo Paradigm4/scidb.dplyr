@@ -66,6 +66,7 @@ select.tbl_scidb <- function(.data, ...) {
 #' @export
 select_.tbl_scidb <- function(.data, ..., .dots = list()) {
   dots <- all_dots(.dots, ...)
+## XXX not good enough, see filter below
   env <- if(length(dots) > 0) dots[[1]]$env else globalenv()
   exprs <- lapply(dots, "[[", "expr")
   vars <- select_vars_(names(.data$db), lapply(exprs, lazyeval::as.lazy, env))
@@ -93,3 +94,4 @@ filter_.tbl_scidb <- function(.data, ..., .dots = list()) {
   expr = gsub("%as%", " as ", expr)
   tbl(scidb(.data$db@meta$db, expr))
 }
+
