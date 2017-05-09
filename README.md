@@ -35,16 +35,16 @@ as.data.frame
 collect
 compute
 dim
-filter_
+filter
 full_join
-group_by_
+group_by
 inner_join
 left_join
-mutate_
+mutate
 right_join
-select_
-summarise_
-transmute_
+select
+summarise
+transmute
 ```
 
 See the TODO file for a list of verbs not yet implemented...
