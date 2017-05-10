@@ -163,8 +163,8 @@ summarise_.tbl_scidb <- function(.data, ..., .dots = list()) {
 }
 
 # XXX suffix argument not yet supported, maybe use out_names in equi_join?
-#' @export
-inner_join.tbl_scidb <- function(x, y, by=NULL, copy=FALSE, suffix=c(".x", ".y"), ...) {
+# internal
+equi_join <- function(x, y, by=NULL, suffix=NULL, ...) {
   if(!(class(y[[1]]) %in% "scidb"))
   {
     y <- tbl_scidb(as.scidb(as.data.frame(y)))
@@ -174,51 +174,26 @@ inner_join.tbl_scidb <- function(x, y, by=NULL, copy=FALSE, suffix=c(".x", ".y")
   right_names <- sprintf("'right_names=%s'", paste(by, collapse=","))
   if(is.null(N)) left_names <- sprintf("'left_names=%s'", paste(by, collapse=","))
   else left_names <- sprintf("'left_names=%s'", paste(N, collapse=","))
-  expr <- sprintf("equi_join(%s, %s, %s, %s)", x[[1]]@name, y[[1]]@name, left_names, right_names)
+  expr <- sprintf("equi_join(%s, %s, %s, %s)", x$db@name, y$db@name, left_names, paste(c(right_names, list(...)), collapse=", "))
   tbl(scidb(x$db@meta$db, expr))
+}
+
+#' @export
+inner_join.tbl_scidb <- function(x, y, by=NULL, copy=FALSE, suffix=c(".x", ".y"), ...) {
+  equi_join(x, y, by, suffix)
 }
 
 #' @export
 left_join.tbl_scidb <- function(x, y, by=NULL, copy=FALSE, suffix=c(".x", ".y"), ...) {
-  if(!(class(y[[1]]) %in% "scidb"))
-  {
-    y <- tbl_scidb(as.scidb(as.data.frame(y)))
-  }
-  if(is.null(by)) by <- intersect(schema(x[[1]], "attributes")$name, schema(y[[1]], "attributes")$name)
-  N <- names(by)
-  right_names <- sprintf("'right_names=%s'", paste(by, collapse=","))
-  if(is.null(N)) left_names <- sprintf("'left_names=%s'", paste(by, collapse=","))
-  else left_names <- sprintf("'left_names=%s'", paste(N, collapse=","))
-  expr <- sprintf("equi_join(%s, %s, %s, %s, 'left_outer=1')", x[[1]]@name, y[[1]]@name, left_names, right_names)
-  tbl(scidb(x$db@meta$db, expr))
+  equi_join(x, y, by, suffix, "'left_outer=1'")
 }
 
 #' @export
 right_join.tbl_scidb <- function(x, y, by=NULL, copy=FALSE, suffix=c(".x", ".y"), ...) {
-  if(!(class(y[[1]]) %in% "scidb"))
-  {
-    y <- tbl_scidb(as.scidb(as.data.frame(y)))
-  }
-  if(is.null(by)) by <- intersect(schema(x[[1]], "attributes")$name, schema(y[[1]], "attributes")$name)
-  N <- names(by)
-  right_names <- sprintf("'right_names=%s'", paste(by, collapse=","))
-  if(is.null(N)) left_names <- sprintf("'left_names=%s'", paste(by, collapse=","))
-  else left_names <- sprintf("'left_names=%s'", paste(N, collapse=","))
-  expr <- sprintf("equi_join(%s, %s, %s, %s, 'right_outer=1')", x[[1]]@name, y[[1]]@name, left_names, right_names)
-  tbl(scidb(x$db@meta$db, expr))
+  equi_join(x, y, by, suffix, "'right_outer=1'")
 }
 
 #' @export
 full_join.tbl_scidb <- function(x, y, by=NULL, copy=FALSE, suffix=c(".x", ".y"), ...) {
-  if(!(class(y[[1]]) %in% "scidb"))
-  {
-    y <- tbl_scidb(as.scidb(as.data.frame(y)))
-  }
-  if(is.null(by)) by <- intersect(schema(x[[1]], "attributes")$name, schema(y[[1]], "attributes")$name)
-  N <- names(by)
-  right_names <- sprintf("'right_names=%s'", paste(by, collapse=","))
-  if(is.null(N)) left_names <- sprintf("'left_names=%s'", paste(by, collapse=","))
-  else left_names <- sprintf("'left_names=%s'", paste(N, collapse=","))
-  expr <- sprintf("equi_join(%s, %s, %s, %s, 'left_outer=1', 'right_outer=1')", x[[1]]@name, y[[1]]@name, left_names, right_names)
-  tbl(scidb(x$db@meta$db, expr))
+  equi_join(x, y, by, suffix, "'left_outer=1'", "'right_outer=1'")
 }
