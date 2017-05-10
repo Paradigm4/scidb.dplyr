@@ -14,6 +14,8 @@ aflify <- function(expr)
   expr = gsub("!=", " <> ", expr)
   expr = gsub("\\|", " or ", expr)
   expr = gsub("\\|\\|", " or ", expr)
+  expr = gsub("&", " and ", expr)
+  expr = gsub("&&", " and ", expr)
   expr = gsub('"', "'", expr)
   expr
 }

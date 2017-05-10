@@ -7,6 +7,7 @@
 #' @seealso \code{\link{scidb}}
 #' @export
 tbl_scidb <- function(x) {
+  if(!("scidb" %in% class(x))) stop("x must be a 'scidb' object")
   structure(list(db=x), class="tbl_scidb")
 }
 
@@ -72,11 +73,11 @@ compute.tbl_scidb <- function(x, name, ...) {
 
 # Verbs -----------------------------------------------------------------------
 
-#' @export
-select.tbl_scidb <- function(.data, ...) {
-  vars <- select_vars(names(.data$db), ...)
-  scidb(.data$db@meta$db, sprintf("project(%s, %s)", .data$db@name, paste(vars, collapse=",")))
-}
+# #' @export
+# select.tbl_scidb <- function(.data, ...) {
+#   vars <- select_vars(names(.data$db), ...)
+#   scidb(.data$db@meta$db, sprintf("project(%s, %s)", .data$db@name, paste(vars, collapse=",")))
+# }
 
 #' @importFrom lazyeval all_dots
 #' @export
