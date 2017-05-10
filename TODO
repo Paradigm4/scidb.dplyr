@@ -1,0 +1,16 @@
+# Single-table Verbs
+
+- slice()
+- arrange()
+- rename()
+- distinct()
+- sample_n() (and sample_frac())
+
+
+# Two-table Verbs
+
+- anti_join()
+- semi_join()
+- intersect()
+- union()
+- setdiff()
