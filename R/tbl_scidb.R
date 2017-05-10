@@ -39,12 +39,12 @@ print.tbl_scidb <- function(x, ...) {
 
 #' @export
 as.data.frame.tbl_scidb <- function(x, ...) {
-  as.R(x$db)
+  as.R(x$db, ...)
 }
 
 #' @export
 as_data.frame.tbl_scidb <- function(x, ...) {
-  as.R(x$db)
+  as.R(x$db, ...)
 }
 
 #' Coerce an existing data structure into a `tbl_scidb`
@@ -60,7 +60,7 @@ as.tbl_scidb <- function(x, db, ...) as.scidb(db, x, ...)
 
 #' @export
 collect.tbl_scidb <- function(x, ...) {
-  tbl_df(as.R(x$db))
+  tbl_df(as.R(x$db, ...))
 }
 
 #' @export
@@ -72,12 +72,6 @@ compute.tbl_scidb <- function(x, name, ...) {
 
 
 # Verbs -----------------------------------------------------------------------
-
-# #' @export
-# select.tbl_scidb <- function(.data, ...) {
-#   vars <- select_vars(names(.data$db), ...)
-#   scidb(.data$db@meta$db, sprintf("project(%s, %s)", .data$db@name, paste(vars, collapse=",")))
-# }
 
 #' @importFrom lazyeval all_dots
 #' @export
