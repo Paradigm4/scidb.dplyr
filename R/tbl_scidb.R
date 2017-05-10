@@ -147,13 +147,13 @@ summarise_.tbl_scidb <- function(.data, ..., .dots = list()) {
   N <- names(dots)
   N[N == ""] <- "V"
   N <- paste(" as ", gsub("\\.", "_", make.names(N, unique=TRUE)))
-  .args = paste(lapply(dots,
+  .args = paste(agsub(lapply(dots,
                function(.x) tryCatch({
                    if (class(eval(.x$expr, envir=.x$env))[1] %in% "scidb")
                    {
                      eval(.x$expr, envir=.x$env)@name
                    } else call2str(.x)
-               }, error=function(e) call2str(.x), warning=function(e) call2str(.x))), N,
+               }, error=function(e) call2str(.x), warning=function(e) call2str(.x)))), N,
          sep=" ", collapse=", ")
   if(is.null(attr(.data, "groups")))
     expr = aflify(sprintf("aggregate(%s, %s)", .data$db@name, paste(.args, collapse=",")))
@@ -162,21 +162,6 @@ summarise_.tbl_scidb <- function(.data, ..., .dots = list()) {
   tbl(scidb(.data$db@meta$db, expr))
 }
 
-# XXX suffix argument not yet supported, maybe use out_names in equi_join?
-# internal
-equi_join <- function(x, y, by=NULL, suffix=NULL, ...) {
-  if(!(class(y[[1]]) %in% "scidb"))
-  {
-    y <- tbl_scidb(as.scidb(as.data.frame(y)))
-  }
-  if(is.null(by)) by <- intersect(schema(x[[1]], "attributes")$name, schema(y[[1]], "attributes")$name)
-  N <- names(by)
-  right_names <- sprintf("'right_names=%s'", paste(by, collapse=","))
-  if(is.null(N)) left_names <- sprintf("'left_names=%s'", paste(by, collapse=","))
-  else left_names <- sprintf("'left_names=%s'", paste(N, collapse=","))
-  expr <- sprintf("equi_join(%s, %s, %s, %s)", x$db@name, y$db@name, left_names, paste(c(right_names, list(...)), collapse=", "))
-  tbl(scidb(x$db@meta$db, expr))
-}
 
 #' @export
 inner_join.tbl_scidb <- function(x, y, by=NULL, copy=FALSE, suffix=c(".x", ".y"), ...) {
