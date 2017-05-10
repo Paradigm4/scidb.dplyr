@@ -55,6 +55,20 @@ as_data.frame.tbl_scidb <- function(x, ...) {
 #' @export
 as.tbl_scidb <- function(x, db, ...) as.scidb(db, x, ...)
 
+# Utilities -------------------------------------------------------------------
+
+#' @export
+collect.tbl_scidb <- function(x, ...) {
+  tbl_df(as.R(x$db))
+}
+
+#' @export
+compute.tbl_scidb <- function(x, name, ...) {
+  if(missing(name)) y <- store(db=x$db@meta$db, expr=x$db, ...)
+  else y <- store(db=x$db@meta$db, expr=x$db, name=name, ...)
+  tbl(y)
+}
+
 
 # Verbs -----------------------------------------------------------------------
 
