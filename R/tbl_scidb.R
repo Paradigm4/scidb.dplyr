@@ -88,8 +88,51 @@ compute.tbl_scidb <- function(x, name, ...) {
 
 # Verbs -----------------------------------------------------------------------
 
+#' Select SciDB subarrays by coordinates
+#'
+#' This method is mapped to the SciDB \code{between} operator. Each argument
+#' specifies a range of SciDB array coordinates in the order of the listed
+#' SciDB array dimensions. Use \code{NA} or missing ranges to include everything.
+#'
+#' @examples
+#' \dontrun{
+#' library(scidb.dplyr)
+#' db <- scidbconnect()
+#' x <- tbl(as.scidb(db, matrix(1:20, nrow=5))) # (a 5 x 4 matrix)
+
+#' # Slice rows zero to three in the first dimension, all of the 2nd dimension:
+#' slice(x, 0:3)
+#'
+#' # Slice rows zero to three in the 1st array dimension, 1 to 2 in the 2nd:
+#' slice(x, 0:3, 1:2)
+#' }
 #' @importFrom lazyeval all_dots
 #' @importFrom scidb schema scidb
+#' @importFrom dplyr slice_
+#' @export
+slice_.tbl_scidb <- function(.data, ..., .dots = list()) {
+  dims <- schema(.data$db, "dimensions")$name
+  dots <- all_dots(.dots, ...)
+  .args <-lapply(dots,
+               function(.x) tryCatch({
+                   if (class(eval(.x$expr, envir=.x$env))[1] %in% "scidb")
+                   {
+                     eval(.x$expr, envir=.x$env)@name
+                   } else eval(.x$expr, envir=.x$env)
+               }, error=function(e) call2str(.x)))
+  if(length(.args) < 1) stop("no matches")
+  w <- options(warn=-1)
+  on.exit(options(w))
+  N <- length(dims) - length(.args)
+  if(N > 0) .args <- c(.args, rep(NA, N))
+  N <- length(dims)
+  .args <- unlist(Map(range, .args))
+  .args <- paste(c(.args[seq(1, by=2, length.out=N)], .args[seq(2, by=2, length.out=N)]), sep=", ", collapse=", ")
+  .args <- gsub("NA", "NULL", gsub("Inf", "NULL", gsub("-Inf", "NULL", .args)))
+  expr <- aflify(sprintf("between(%s, %s)", .data$db@name, .args))
+  tbl(scidb(.data$db@meta$db, expr))
+}
+
 #' @importFrom dplyr select_
 #' @export
 select_.tbl_scidb <- function(.data, ..., .dots = list()) {
@@ -103,7 +146,7 @@ select_.tbl_scidb <- function(.data, ..., .dots = list()) {
                      eval(.x$expr, envir=.x$env)@name
                    } else eval(.x$expr, envir=.x$env)
                }, error=function(e) call2str(.x)))
-  if(length(args) < 1) stop("no matches")
+  if(length(.args) < 1) stop("no matches")
   .args <- unlist(.args)
   if(is.null(names(.args)) || prod(nchar(names(.args))) == 0)
   {
