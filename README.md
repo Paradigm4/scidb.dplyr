@@ -109,11 +109,11 @@ select(x, petal=starts_with("Pet"), sepal=starts_with("Sep")) %>% collect() %>% 
 
 ```
 as.data.frame collect compute dim
-filter select summarise transmute group_by mutate
+filter select summarise transmute group_by mutate slice
 full_join inner_join left_join right_join
 ```
 
-Pluse experimental support for the select helper functions (`?select_helpers`).
+Plus experimental support for the select helper functions (`?select_helpers`).
 
 See the https://github.com/Paradigm4/scidb.dplyr/blob/master/TODO file for a
 list of verbs not yet implemented (help/assistance is welcome)...
