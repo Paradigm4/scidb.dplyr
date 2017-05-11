@@ -77,13 +77,17 @@ compute.tbl_scidb <- function(x, name, ...) {
 #' @export
 select_.tbl_scidb <- function(.data, ..., .dots = list()) {
   dots <- all_dots(.dots, ...)
-## XXX not good enough, see filter below
-  env <- if(length(dots) > 0) dots[[1]]$env else globalenv()
-  exprs <- lapply(dots, "[[", "expr")
-  vars <- select_vars_(names(.data$db), lapply(exprs, lazyeval::as.lazy, env))
-# XXX why not the following? Scoping problems with this...
-#  .data$db@meta$db$project(R(.data$db@name), paste(vars, collapse=","))
-  tbl(scidb(.data$db@meta$db, sprintf("project(%s, %s)", .data$db@name, paste(vars, collapse=","))))
+  .args = paste(
+             lapply(dots,
+               function(.x) tryCatch({
+                   if (class(eval(.x$expr, envir=.x$env))[1] %in% "scidb")
+                   {
+                     eval(.x$expr, envir=.x$env)@name
+                   } else call2str(.x)
+               }, error=function(e) call2str(.x))),
+         collapse=", ")
+  expr = aflify(sprintf("project(%s, %s)", .data$db@name, .args))
+  tbl(scidb(.data$db@meta$db, expr))
 }
 
 #' @export
