@@ -23,6 +23,7 @@ tbl.scidb <- function(src, ...)
   tbl_scidb(src)
 }
 
+#' @importFrom dplyr tbl_vars
 #' @export
 tbl_vars.tbl_scidb <- function(x) names(x$db)
 
@@ -63,12 +64,13 @@ as_data.frame.tbl_scidb <- function(x, ...) {
 #'   some sparse matrices and data frames (see \code{\link{as.scidb}}).
 #' @param db a scidb database connetion object.
 #' @param ... additional parameters passed to \code{\link{as.scidb}}.
+#' @importFrom scidb as.scidb
 #' @export
 as.tbl_scidb <- function(x, db, ...) as.scidb(db, x, ...)
 
 # Utilities -------------------------------------------------------------------
 
-#' @importFrom dplyr collect
+#' @importFrom dplyr collect tbl_df
 #' @export
 collect.tbl_scidb <- function(x, ...) {
   tbl_df(as.R(x$db, ...))
@@ -86,7 +88,7 @@ compute.tbl_scidb <- function(x, name, ...) {
 # Verbs -----------------------------------------------------------------------
 
 #' @importFrom lazyeval all_dots
-#' @importFrom scidb schema
+#' @importFrom scidb schema scidb
 #' @importFrom dplyr select_
 #' @export
 select_.tbl_scidb <- function(.data, ..., .dots = list()) {

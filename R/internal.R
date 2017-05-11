@@ -1,3 +1,4 @@
+#' @importFrom utils capture.output
 call2str <- function(.x)
 {
 # XXX fragile, improve this, also remove ::: call
