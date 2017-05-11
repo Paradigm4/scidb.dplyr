@@ -4,10 +4,12 @@
 \alias{tbl.scidb}
 \title{Create a dplyr tbl from a \code{scidb} object}
 \usage{
-\method{tbl}{scidb}(data, ...)
+\method{tbl}{scidb}(src, ...)
 }
 \arguments{
-\item{data}{an object of class \code{scidb}}
+\item{src}{an object of class \code{scidb}}
+
+\item{...}{ignored}
 }
 \value{
 an object of class \code{tbl_scidb}
