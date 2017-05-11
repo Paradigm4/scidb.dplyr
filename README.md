@@ -83,7 +83,7 @@ d %>% group_by(Species) %>% summarise(mean=mean(Petal_Length)) %>% as.data.frame
 
 ## Experimental support for the dplyr select helper functions
 
-With includes at least limited support for renaming SciDB array attributes as
+Which includes at least limited support for renaming SciDB array attributes as
 shown in the example below.
 
 ```{r}
