@@ -1,7 +1,7 @@
 # A SciDB backend for dplyr
 
 The scidb.dplyr R package defines a SciDB interface to the dplyr way to
-work with data backed by SciDB arrays (http://scidb.org). The package is still
+work with data backed by SciDB arrays (http://paradigm4.com). The package is still
 experimental, please contribute!
 
 The package style follows the dplyr data frame implementation more closely than
