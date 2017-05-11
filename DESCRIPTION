@@ -9,7 +9,7 @@ Authors@R: c(
 Copyright: Paradigm4, Inc.
 Description: A 'SciDB' database back end for the 'dplyr' package.
 BugReports: https://github.com/Paradigm4/scidb.dplyr/issues
-URL: http://paradigm4.github.io/scidb.dplyr
+URL: https://github.com/Paradigm4/scidb.dplyr
 VignetteBuilder: knitr
 Depends:
     R (>= 3.0.0),
