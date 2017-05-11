@@ -9,6 +9,15 @@ those of SQL-based external database back ends. We made this choice because
 SciDB does not present a SQL API.
 
 
+## Requirements
+
+- A SciDB database version greater than 15.12.
+- The https://github.com/Paradigm4/equi_join SciDB plugin.
+- The https://github.com/Paradigm4/grouped_aggregate plugin.
+- The SciDB shim HTTP interface https://github.com/Paradigm4/shim.
+- The scidb R package from CRAN (`install.packages("scidb")`).
+
+
 ## Install
 
 ```{r}
