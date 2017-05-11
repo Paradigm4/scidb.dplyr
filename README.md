@@ -81,24 +81,39 @@ d %>% group_by(Species) %>% summarise(mean=mean(Petal_Length)) %>% as.data.frame
 ## 3 versicolor 4.260
 ```
 
-## Implemented so far...
+## Experimental support for the dplyr select helper functions
+
+With includes at least limited support for renaming SciDB array attributes as
+shown in the example below.
+
+```{r}
+library(scidb.dplyr)
+db <- scidbconnect()
+x <- tbl(as.scidb(db, iris))
+
+select(x, petal=starts_with("Pet"), sepal=starts_with("Sep")) %>% collect() %>% head()
+
+## # A tibble: 6 × 5
+##       i petal1 petal2 sepal1 sepal2
+##   <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
+## 1     1    1.4    0.2    5.1    3.5
+## 2     2    1.4    0.2    4.9    3.0
+## 3     3    1.3    0.2    4.7    3.2
+## 4     4    1.5    0.2    4.6    3.1
+## 5     5    1.4    0.2    5.0    3.6
+## 6     6    1.7    0.4    5.4    3.9
+```
+
+
+## Verbs and misc. functions implemented so far...
 
 ```
-as.data.frame
-collect
-compute
-dim
-filter
-full_join
-group_by
-inner_join
-left_join
-mutate
-right_join
-select
-summarise
-transmute
+as.data.frame collect compute dim
+filter select summarise transmute group_by mutate
+full_join inner_join left_join right_join
 ```
+
+Pluse experimental support for the select helper functions (`?select_helpers`).
 
 See the https://github.com/Paradigm4/scidb.dplyr/blob/master/TODO file for a
 list of verbs not yet implemented (help/assistance is welcome)...

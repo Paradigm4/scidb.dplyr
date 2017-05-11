@@ -77,6 +77,7 @@ collect.tbl_scidb <- function(x, ...) {
 }
 
 #' @importFrom dplyr compute
+#' @importFrom scidb store
 #' @export
 compute.tbl_scidb <- function(x, name, ...) {
   if(missing(name)) y <- store(db=x$db@meta$db, expr=x$db, ...)
@@ -92,9 +93,9 @@ compute.tbl_scidb <- function(x, name, ...) {
 #' @importFrom dplyr select_
 #' @export
 select_.tbl_scidb <- function(.data, ..., .dots = list()) {
-  dots <- all_dots(.dots, ...)
   atts <- schema(.data$db, "attributes")$name
   dplyr:::set_current_vars(atts)  # hmmm... XXX how to resolve this requirement?
+  dots <- all_dots(.dots, ...)
   .args <-lapply(dots,
                function(.x) tryCatch({
                    if (class(eval(.x$expr, envir=.x$env))[1] %in% "scidb")
