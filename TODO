@@ -1,6 +1,5 @@
 # Single-table Verbs
 
-- slice()
 - arrange()
 - rename()
 - distinct()
