@@ -11,11 +11,13 @@ SciDB does not present a SQL API.
 
 ## Requirements
 
-- A SciDB database version greater than 15.12.
+- A SciDB database version greater than or equal to 15.12.
 - The https://github.com/Paradigm4/equi_join SciDB plugin.
 - The https://github.com/Paradigm4/grouped_aggregate plugin.
 - The SciDB shim HTTP interface https://github.com/Paradigm4/shim.
 - The scidb R package from CRAN (`install.packages("scidb")`).
+
+Best performance is obtained with the upcoming 17.x SciDB release.
 
 
 ## Install
