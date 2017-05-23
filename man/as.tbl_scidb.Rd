@@ -17,4 +17,3 @@ some sparse matrices and data frames (see \code{\link{as.scidb}}).}
 \description{
 Coerce an existing data structure into a `tbl_scidb`
 }
-

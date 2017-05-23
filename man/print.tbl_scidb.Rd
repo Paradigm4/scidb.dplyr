@@ -14,4 +14,3 @@ print.tbl_scidb(x, ...)
 \description{
 Print a summary of a SciDB tbl object
 }
-
