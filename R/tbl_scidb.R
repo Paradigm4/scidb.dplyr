@@ -70,6 +70,17 @@ as.tbl_scidb <- function(x, db, ...) as.scidb(db, x, ...)
 
 # Utilities -------------------------------------------------------------------
 
+#' @export
+src_scidb <- function(db_connect, ...) {
+  db = scidbconnect(db_connect)
+}
+
+#' @importFrom dplyr copy_to tbl
+#' @export
+copy_to <- function(db, data, temporary, ...) {
+  tbl(as.scidb(db, data, gc = temporary, ...))
+}
+
 #' @importFrom dplyr collect tbl_df
 #' @export
 collect.tbl_scidb <- function(x, ...) {
