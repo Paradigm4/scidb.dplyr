@@ -71,14 +71,28 @@ as.tbl_scidb <- function(x, db, ...) as.scidb(db, x, ...)
 # Utilities -------------------------------------------------------------------
 
 #' @export
-src_scidb <- function(db_connect, ...) {
-  db = scidbconnect(db_connect)
+src_scidb <- function(ip_address, ...) {
+  db = scidbconnect(ip_address, ...)
+}
+
+#' @importFrom dplyr src_tbls
+#' @export
+src_tbls <- function(db) 
+{
+  line0 = db$list("'arrays'")
+  line1 = db$project(line0, "name")
+  as.R(line1, only_attributes = TRUE)$name
 }
 
 #' @importFrom dplyr copy_to tbl
 #' @export
 copy_to <- function(db, data, temporary, ...) {
-  tbl(as.scidb(db, data, gc = temporary, ...))
+  argsvals = list(...)
+  if("name" %in% argsvals){
+    tbl(as.scidb(db, data, name=name, gc = temporary, ...))
+  }else{
+    tbl(as.scidb(db, data, gc = temporary, ...))
+  }
 }
 
 #' @importFrom dplyr collect tbl_df
