@@ -172,13 +172,33 @@ select_.tbl_scidb <- function(.data, ..., .dots = list()) {
                    } else eval(.x$expr, envir=.x$env)
                }, error=function(e) call2str(.x)))
   if(length(.args) < 1) stop("no matches")
+  .args_char <- vapply(.args, is.character, TRUE)
+  .args_name <- names(.args)
+  if(any(.args_char))
+  {
+    .args[.args_char] <- lapply(.args[.args_char], function(x) match(gsub("^ *", "", x), atts))
+  }
+  names(.args) <- .args_name
   .args <- unlist(.args)
-  if(is.null(names(.args)) || prod(nchar(names(.args))) == 0)
+  if(is.character(.args)) stop("selection error, this may be a bug in scidb.dplyr, please report")
+  if(!is.null(names(.args)) && prod(nchar(names(.args))) == 0)
+  { # only some attributes renamed, not all of them.
+    .args_name <- which(nchar(names(.args)) == 0)
+    names(.args)[.args_name] <- atts[.args[.args_name]]
+  }
+  if(is.null(names(.args)))
   {
     expr <- aflify(sprintf("project(%s, %s)", .data$db@name, paste(atts[.args], collapse=",")))
   } else { # arrgh...rename attributes; this needs work XXX
-    aply <- paste(names(.args), atts[.args], sep=", ", collapse=", ")
-    expr <- sprintf("project(apply(%s, %s), %s)", .data$db@name, aply, paste(names(.args), collapse=","))
+    .args_rename <- .args[which(names(.args) != atts[.args])]
+    if(length(.args_rename) < 1)
+      expr <- aflify(sprintf("project(%s, %s)", .data$db@name, paste(atts[.args], collapse=",")))
+    else
+    {
+      names(.args_rename) <- gsub("\\.", "_", make.names(names(.args_rename), unique=TRUE))
+      aply <- paste(names(.args_rename), atts[.args_rename], sep=", ", collapse=", ")
+      expr <- sprintf("project(apply(%s, %s), %s)", .data$db@name, aply, paste(names(.args), collapse=","))
+    }
   }
   tbl(scidb(.data$db@meta$db, expr))
 }
