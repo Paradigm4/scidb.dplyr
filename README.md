@@ -35,7 +35,7 @@ db = scidbconnect()
 x  = as.scidb(db, iris)    # a 'scidb' object
 d  = tbl(x)                # a 'tbl_scidb' object (dplyr)
 
-select(d, Petal_Length, Species) %>% filter(i < 100, Petal_Length < 1.4) %>% as.data.frame %>% head
+select(d, Petal_Length, Species) %>% filter(Petal_Length < 1.4) %>% as.data.frame %>% head
 
 ##    i Petal_Length Species
 ## 1  3          1.3  setosa
