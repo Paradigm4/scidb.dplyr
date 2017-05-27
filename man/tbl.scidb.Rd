@@ -20,3 +20,4 @@ Create a dplyr tbl from a \code{scidb} object
 \seealso{
 \code{\link{scidb}} \code{\link{tbl_scidb}}
 }
+

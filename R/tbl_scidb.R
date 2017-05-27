@@ -110,6 +110,20 @@ compute.tbl_scidb <- function(x, name, ...) {
   tbl(y)
 }
 
+#' @importFrom dplyr explain
+#' @export
+explain.tbl_scidb <- function(x, ...)
+{
+  x$db@name # XXX consider running AFL explain too
+}
+
+#' @importFrom dplyr show_query
+#' @export
+show_query.tbl_scidb <- function(x, ...)
+{
+  x$db@name
+}
+
 
 # Verbs -----------------------------------------------------------------------
 

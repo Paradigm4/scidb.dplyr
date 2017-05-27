@@ -14,3 +14,4 @@ as_data.frame.tbl_scidb(x, ...)
 \description{
 Download a remote SciDB array into an R data frame
 }
+

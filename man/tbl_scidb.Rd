@@ -18,3 +18,4 @@ Create a dplyr tbl from a \code{scidb} object
 \seealso{
 \code{\link{scidb}}
 }
+
